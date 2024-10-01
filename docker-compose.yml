@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: nestjs-backend
+    restart: always
+    ports:
+      - "3001:3001"  # Map NestJS internal port 3001 to host port 3001
+    depends_on:
+      - mongodb
+    environment:
+      MONGO_URI: mongodb://mongodb:27017/mydb # MongoDB connection string
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: nextjs-frontend
+    restart: always
+    ports:
+      - "3000:3000"  # Map Next.js internal port 3000 to host port 3000
+    depends_on:
+      - backend
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"

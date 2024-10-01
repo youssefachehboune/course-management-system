@@ -1,0 +1,22 @@
+# Ignore configuration files
+lint-staged.config.js
+jest.config.js
+.eslintrc.js
+webpack.config.js
+*.config.js
+
+# Ignore node_modules and build directories
+node_modules/
+dist/
+build/
+.tmp
+.idea
+.env
+coverage/
+.npm
+.vscode
+.nyc_output
+k6-results
+
+*.spec.ts
+test/
