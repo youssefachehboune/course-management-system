@@ -82,6 +82,7 @@ export class CoursesController {
    * @param {string} [search] - The search term for filtering courses by title.
    * @param {number} [page=1] - The page number for pagination (default is 1).
    * @param {number} [limit=10] - The number of courses to return per page (default is 10).
+   * @param {number} [sortnumber=1] - The sort order for the search results (1 for ascending, -1 for descending).
    * @returns {Promise<Course[]>} A list of courses that match the search term or all courses if no search term is provided.
    *
    * @example
@@ -117,6 +118,12 @@ export class CoursesController {
     description: 'Search term for filtering by title',
   })
   @ApiQuery({
+      name: 'instructor',
+      required: false,
+      description: 'Search term for filtering by instructor',
+      example: 'Michael Gill'
+  })
+  @ApiQuery({
     name: 'page',
     required: false,
     type: Number,
@@ -130,14 +137,26 @@ export class CoursesController {
     description: 'Number of results per page',
     example: 10,
   })
+  @ApiQuery({
+    name: 'sort',
+    required: false,
+    description: 'Sort order (1 for ascending, -1 for descending)',
+    type: Number,
+    example: 1,
+  })
   @Get()
   findAll(
     @Query('search') search?: string,
+    @Query('instructor') instructor?: string,
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
+    @Query('sort') sort: Number = 1,
   ): Promise<Course[]> {
     if (search) {
-      return this.coursesService.findByTitle(search, page, limit);
+        if(instructor) {
+         return this.coursesService.findByTitleAndInstructor(search, instructor, page, limit, Number(sort) as 1 | -1);    
+        }
+      return this.coursesService.findByTitle(search, page, limit, Number(sort) as 1 | -1);
     }
     return this.coursesService.findAll(page, limit);
   }

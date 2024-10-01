@@ -55,6 +55,7 @@ export class CoursesService {
    * @param {string} search - The search term to filter courses by title.
    * @param {number} [page=1] - The page number for pagination.
    * @param {number} [limit=10] - The number of courses to return per page.
+   * @param {number} [sortnumber=1] - The sort order for the search results (1 for ascending, -1 for descending).
    * @returns {Promise<Course[]>} A list of courses that match the search criteria.
    *
    * @example
@@ -64,17 +65,55 @@ export class CoursesService {
     search: string,
     page: number = 1,
     limit: number = 10,
+    sortnumber: 1 | -1 = 1
   ): Promise<Course[]> {
     const skip = (page - 1) * limit;
+    console.log(sortnumber);
     return this.courseModel
       .find({
         $or: [
-          { title: new RegExp(search, 'i') },
-          { instructor: new RegExp(search, 'i') },
+          { title: new RegExp(search, 'i') }
         ],
       })
+      .sort({ title: sortnumber })
       .skip(skip)
       .limit(limit)
       .exec();
   }
+
+  /**
+   * Searches for courses by title, with pagination.
+   *
+   * @param {string} search - The search term to filter courses by title.
+   * @param {number} [page=1] - The page number for pagination.
+   * @param {number} [limit=10] - The number of courses to return per page.
+   * @param {number} [sortnumber=1] - The sort order for the search results (1 for ascending, -1 for descending).
+   * @returns {Promise<Course[]>} A list of courses that match the search criteria.
+   *
+   * @example
+   * const courses = await coursesService.findByTitle('JavaScript', 1, 10);
+   */
+  async findByTitleAndInstructor(
+    search: string,
+    instructor: string,
+    page: number = 1,
+    limit: number = 10,
+    sortnumber: 1 | -1 = 1
+  ): Promise<Course[]> {
+    const skip = (page - 1) * limit;
+
+    return this.courseModel
+      .find({
+        $and: [
+          { title: new RegExp(search, 'i') },
+          { instructor: new RegExp(instructor, 'i') }
+        ],
+      })
+      .sort({ title: sortnumber })
+       .skip(skip)
+      .limit(limit)
+      .exec();
+  }
+
+  
 }
