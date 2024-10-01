@@ -2,17 +2,20 @@ import type {
   CorsConfig,
   NestConfig,
   SwaggerConfig,
-} from 'shared/configs/config.interface';
+} from '../shared/configs/config.interface';
 
 import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AllExceptionsFilter } from 'shared/filters/all-exceptions.filter';
-import { ResponseInterceptor } from 'shared/interceptors/response.interceptor';
+import * as dotenv from 'dotenv';
+
+import { AllExceptionsFilter } from '../shared/filters/all-exceptions.filter';
+import { ResponseInterceptor } from '../shared/interceptors/response.interceptor';
+dotenv.config();
 
 import { AppModule } from './app.module';
-
+import { CoursesService } from './courses/courses.service';
 /**
  * Create the NestJS application and set up global pipes and hooks.
  *
@@ -83,14 +86,14 @@ function configureCors(app: INestApplication, corsConfig: CorsConfig): void {
  *
  * @return {Promise<void>}
  */
-async function bootstrap(): Promise<void> {
+export async function bootstrap(startServer = true) {
   const app = await createApp();
 
   const configService = app.get(ConfigService);
   const nestConfig = configService.get<NestConfig>('nest');
   const corsConfig = configService.get<CorsConfig>('cors');
   const swaggerConfig = configService.get<SwaggerConfig>('swagger');
-
+  const courseService = app.get(CoursesService);
   configureFilters(app);
   if (swaggerConfig) {
     configureSwagger(app, swaggerConfig);
@@ -100,8 +103,11 @@ async function bootstrap(): Promise<void> {
   }
 
   // Start the server
-  await app.listen(nestConfig?.port ?? 3001);
-  Logger.log(`Server running on ${nestConfig?.port ?? 3001}`, 'Bootstrap');
+  if ((startServer = true)) {
+    await app.listen(nestConfig?.port ?? 3001);
+    Logger.log(`Server running on ${nestConfig?.port ?? 3001}`, 'Bootstrap');
+  }
+  return { app, courseService };
 }
 
 bootstrap().catch((error: unknown) => {

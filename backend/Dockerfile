@@ -13,6 +13,7 @@ RUN npm install
 # Copy the rest of the application source code to the working directory
 COPY . .
 
+
 # Build the NestJS application
 RUN npm run build
 
