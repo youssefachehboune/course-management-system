@@ -9,10 +9,10 @@ import { CreateCourseDto } from './dto/create-course.dto';
 export class CoursesService {
   /**
    * Creates an instance of the CoursesService class.
-   * @param {Model<CourseDocument>} courseModel - The Mongoose model for the Course collection.
+   * @param {Model<CourseDocument>} CourseModel - The Mongoose model for the Course collection.
    */
   constructor(
-    @InjectModel(Course.name) private courseModel: Model<CourseDocument>,
+    @InjectModel(Course.name) private CourseModel: Model<CourseDocument>,
   ) {}
 
   /**
@@ -30,7 +30,7 @@ export class CoursesService {
    * });
    */
   async create(courseData: CreateCourseDto): Promise<Course> {
-    const newCourse = new this.courseModel(courseData);
+    const newCourse = new this.CourseModel(courseData);
     return newCourse.save();
   }
 
@@ -46,7 +46,7 @@ export class CoursesService {
    */
   async findAll(page: number = 1, limit: number = 10): Promise<Course[]> {
     const skip = (page - 1) * limit;
-    return this.courseModel.find().skip(skip).limit(limit).exec();
+    return this.CourseModel.find().skip(skip).limit(limit).exec();
   }
 
   /**
@@ -65,16 +65,12 @@ export class CoursesService {
     search: string,
     page: number = 1,
     limit: number = 10,
-    sortnumber: 1 | -1 = 1
+    sortnumber: 1 | -1 = 1,
   ): Promise<Course[]> {
     const skip = (page - 1) * limit;
-    console.log(sortnumber);
-    return this.courseModel
-      .find({
-        $or: [
-          { title: new RegExp(search, 'i') }
-        ],
-      })
+    return this.CourseModel.find({
+      $or: [{ title: new RegExp(search, 'i') }],
+    })
       .sort({ title: sortnumber })
       .skip(skip)
       .limit(limit)
@@ -98,22 +94,19 @@ export class CoursesService {
     instructor: string,
     page: number = 1,
     limit: number = 10,
-    sortnumber: 1 | -1 = 1
+    sortnumber: 1 | -1 = 1,
   ): Promise<Course[]> {
     const skip = (page - 1) * limit;
 
-    return this.courseModel
-      .find({
-        $and: [
-          { title: new RegExp(search, 'i') },
-          { instructor: new RegExp(instructor, 'i') }
-        ],
-      })
+    return this.CourseModel.find({
+      $and: [
+        { title: new RegExp(search, 'i') },
+        { instructor: new RegExp(instructor, 'i') },
+      ],
+    })
       .sort({ title: sortnumber })
-       .skip(skip)
+      .skip(skip)
       .limit(limit)
       .exec();
   }
-
-  
 }

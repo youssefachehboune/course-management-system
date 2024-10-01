@@ -1,7 +1,8 @@
+/* eslint-disable  no-console, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call*/
 import * as dotenv from 'dotenv';
 dotenv.config();
-import * as fs from 'node:fs';
-import * as path from 'node:path';
+import fs from 'node:fs';
+import path from 'node:path';
 
 import { NestFactory } from '@nestjs/core';
 import { Presets, SingleBar } from 'cli-progress';
@@ -10,19 +11,18 @@ import { connect, disconnect } from 'mongoose';
 import { AppModule } from '../../src/app.module';
 import { CoursesService } from '../courses/courses.service';
 import { CreateCourseDto } from '../courses/dto/create-course.dto';
-import { bootstrap } from '../main';
 
 /**
  * Seeds the courses data into the database.
  *
  * This function reads the courses data from a JSON file,
  * connects to the MongoDB database using Mongoose, and inserts
- * the courses into the database using the `CoursesService`.
+ * the courses into the database using the CoursesService.
  *
  * A CLI progress bar is used to track the progress of the operation.
  *
  * @async
- * @throws {Error} Throws an error if the `MONGODB_URI` environment variable is not defined.
+ * @throws {Error} Throws an error if the MONGODB_URI environment variable is not defined.
  * @throws {Error} Throws an error if there's an issue reading the courses data file.
  */
 const seedCourses = async () => {
@@ -46,7 +46,7 @@ const seedCourses = async () => {
     courses = JSON.parse(jsonData);
   } catch (error) {
     console.error('Error reading courses data:', error);
-    process.exit(1);
+    throw new Error('Error reading courses data'); // Replace process.exit
   }
 
   // Initialize the progress bar
@@ -70,10 +70,10 @@ const seedCourses = async () => {
 };
 
 /**
- * Executes the `seedCourses` function and handles any errors.
+ * Executes the seedCourses function and handles any errors.
  * If an error occurs, it logs the error message and terminates the process.
  */
 seedCourses().catch(error => {
   console.error('Seeding failed:', error);
-  process.exit(1);
+  throw error; // Replace process.exit with throwing the error
 });

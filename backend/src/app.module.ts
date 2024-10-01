@@ -8,7 +8,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CoursesModule } from './courses/courses.module';
 import { UsersModule } from './users/users.module';
-console.log('MongoDB URI:', process.env.MONGODB_URI);
 if (!process.env.MONGODB_URI) {
   throw new Error('MONGODB_URI environment variable is not defined');
 }

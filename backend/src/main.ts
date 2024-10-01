@@ -103,7 +103,7 @@ export async function bootstrap(startServer = true) {
   }
 
   // Start the server
-  if ((startServer = true)) {
+  if (startServer) {
     await app.listen(nestConfig?.port ?? 3001);
     Logger.log(`Server running on ${nestConfig?.port ?? 3001}`, 'Bootstrap');
   }

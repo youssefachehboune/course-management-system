@@ -118,10 +118,10 @@ export class CoursesController {
     description: 'Search term for filtering by title',
   })
   @ApiQuery({
-      name: 'instructor',
-      required: false,
-      description: 'Search term for filtering by instructor',
-      example: 'Michael Gill'
+    name: 'instructor',
+    required: false,
+    description: 'Search term for filtering by instructor',
+    example: 'Michael Gill',
   })
   @ApiQuery({
     name: 'page',
@@ -150,13 +150,24 @@ export class CoursesController {
     @Query('instructor') instructor?: string,
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
-    @Query('sort') sort: Number = 1,
+    @Query('sort') sort: number = 1,
   ): Promise<Course[]> {
     if (search) {
-        if(instructor) {
-         return this.coursesService.findByTitleAndInstructor(search, instructor, page, limit, Number(sort) as 1 | -1);    
-        }
-      return this.coursesService.findByTitle(search, page, limit, Number(sort) as 1 | -1);
+      if (instructor) {
+        return this.coursesService.findByTitleAndInstructor(
+          search,
+          instructor,
+          page,
+          limit,
+          Number(sort) as 1 | -1,
+        );
+      }
+      return this.coursesService.findByTitle(
+        search,
+        page,
+        limit,
+        Number(sort) as 1 | -1,
+      );
     }
     return this.coursesService.findAll(page, limit);
   }
