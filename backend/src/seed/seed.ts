@@ -1,13 +1,11 @@
 /* eslint-disable  no-console, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call*/
 import * as dotenv from 'dotenv';
 dotenv.config();
-import fs from 'node:fs';
-import path from 'node:path';
-
+const path = require('path');
+const fs = require('fs');
 import { NestFactory } from '@nestjs/core';
 import { Presets, SingleBar } from 'cli-progress';
 import { connect, disconnect } from 'mongoose';
-
 import { AppModule } from '../../src/app.module';
 import { CoursesService } from '../courses/courses.service';
 import { CreateCourseDto } from '../courses/dto/create-course.dto';
@@ -38,42 +36,30 @@ const seedCourses = async () => {
 
   let courses: CreateCourseDto[];
   try {
-    // Read the courses data from a JSON file
-    const jsonData = fs.readFileSync(
-      path.join(__dirname, 'data', 'courses_data.json'),
-      'utf8',
-    );
+    const filePath = path.resolve(__dirname, 'data', 'courses_data.json');
+    const jsonData = fs.readFileSync(filePath, 'utf8');
     courses = JSON.parse(jsonData);
   } catch (error) {
-    console.error('Error reading courses data:', error);
-    throw new Error('Error reading courses data'); // Replace process.exit
+    throw new Error('Error reading courses data');
   }
 
-  // Initialize the progress bar
   const progressBar = new SingleBar(
-    {
-      format: 'Seeding Courses |{bar}| {percentage}% | {value}/{total} Courses',
-    },
+    { format: 'Seeding Courses |{bar}| {percentage}% | {value}/{total} Courses' },
     Presets.shades_classic,
   );
   progressBar.start(courses.length, 0);
 
-  // Seed the courses into the database
   for (const [index, course] of courses.entries()) {
-    await coursesService.create(course); // Insert course into database
-    progressBar.update(index + 1); // Update the progress bar
+    await coursesService.create(course);
+    progressBar.update(index + 1);
   }
 
-  progressBar.stop(); // Stop the progress bar after completion
-  await disconnect(); // Disconnect from MongoDB
+  progressBar.stop();
+  await disconnect();
   console.log(`Seeding completed! Total courses seeded: ${courses.length}`);
 };
 
-/**
- * Executes the seedCourses function and handles any errors.
- * If an error occurs, it logs the error message and terminates the process.
- */
 seedCourses().catch(error => {
   console.error('Seeding failed:', error);
-  throw error; // Replace process.exit with throwing the error
+  throw error;
 });

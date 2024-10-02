@@ -62,6 +62,7 @@ function configureSwagger(
       .setTitle(swaggerConfig.title || 'Nestjs')
       .setDescription(swaggerConfig.description || 'The nestjs API description')
       .setVersion(swaggerConfig.version || '1.0')
+      .addBearerAuth() // Add Bearer Auth support
       .build();
     const document = SwaggerModule.createDocument(app, options);
     SwaggerModule.setup(swaggerConfig.path || 'api', app, document);

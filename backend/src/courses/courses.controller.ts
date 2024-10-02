@@ -1,20 +1,23 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger'; // Import Swagger decorators
-
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Course } from './course.schema';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
+import { JwtUsername } from 'src/auth/jwt-username.decorator';
+import { UsersService } from '../users/users.service';
 
 @ApiTags('courses') // Group the endpoints under "Courses" in the Swagger UI
 @Controller('courses')
 export class CoursesController {
-  constructor(private readonly coursesService: CoursesService) {}
+  constructor(private readonly coursesService: CoursesService, private usersService: UsersService) {}
 
   /**
    * Creates a new course.
@@ -28,7 +31,6 @@ export class CoursesController {
    * {
    *   "title": "Compatible user-facing hierarchy",
    *   "description": "Modern consider if. Girl current truth work available chair write.",
-   *   "instructor": "Michael Gill",
    *   "schedule": "Thursday 13:00"
    * }
    */
@@ -62,15 +64,21 @@ export class CoursesController {
           title: 'Compatible user-facing hierarchy',
           description:
             'Modern consider if. Girl current truth work available chair write.',
-          instructor: 'Michael Gill',
           schedule: 'Thursday 13:00',
         },
       },
     },
   })
+  @ApiBearerAuth()
   @Post()
-  create(@Body() createCourseDto: CreateCourseDto): Promise<Course> {
-    return this.coursesService.create(createCourseDto);
+  @UseGuards(JwtAuthGuard)
+  async create(@JwtUsername() username: string, @Body() createCourseDto: CreateCourseDto): Promise<Course> {
+    const user= await this.usersService.findByUsername(username);
+    if(!user) throw new Error('User not found');
+    const newCourse = await this.coursesService.create({ ...createCourseDto, instructor: user?.fullName }, user.username);
+    user.courses.push(newCourse.id);
+    const newuser = await user.save();
+    return newCourse;
   }
 
   /**

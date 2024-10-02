@@ -1,8 +1,26 @@
-/*
-https://docs.nestjs.com/controllers#controllers
-*/
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { UsersService } from './users.service';
+import { JwtUsername } from 'src/auth/jwt-username.decorator';
 
-import { Controller } from '@nestjs/common';
+@ApiTags('users')
+@Controller('users')
+export class UsersController {
+    constructor(private readonly userService: UsersService) {}
 
-@Controller()
-export class UsersController {}
+    @ApiBearerAuth()
+    @Get('mycourses')
+    @ApiResponse({ status: 200, description: 'The user courses' })
+    @ApiResponse({ status: 401, description: 'Unauthorized' })
+    @ApiResponse({ status: 404, description: 'User not found' })
+    @ApiResponse({ status: 500, description: 'User Name is required' })
+
+    @UseGuards(JwtAuthGuard)
+    getMyCourses(@JwtUsername() username: string) {
+        if (!username) {
+            throw new Error('User Name is required');
+        }
+        return this.userService.getMyCourses(username);
+    }
+}

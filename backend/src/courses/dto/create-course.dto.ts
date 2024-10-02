@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 /**
  * Data Transfer Object (DTO) for creating a course.
@@ -28,8 +28,8 @@ export class CreateCourseDto {
    * @required
    */
   @IsString()
-  @IsNotEmpty()
-  instructor: string;
+  @IsOptional()
+  instructor?: string;
 
   /**
    * The schedule or timeline for the course.

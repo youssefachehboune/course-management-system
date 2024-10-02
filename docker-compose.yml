@@ -11,7 +11,7 @@ services:
     depends_on:
       - mongodb
     environment:
-      MONGO_URI: mongodb://mongodb:27017/mydb # MongoDB connection string
+      MONGODB_URI: mongodb://mongodb:27017/mydb # MongoDB connection string
     command: sh -c "npm run seed && npm start"
 
   frontend:

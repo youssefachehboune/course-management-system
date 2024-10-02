@@ -1,20 +1,19 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-export type CourseDocument = Course & Document; // Ensure this line is present
+export type CourseDocument = Course & Document;
 
 /**
  * The schema for the Course model, representing a course in the database.
  */
-@Schema()
+@Schema({ timestamps: true })
 export class Course {
   /**
    * The title of the course.
    * @type {string}
    * @required
-   * @index
    */
-  @Prop({ required: true, index: true })
+  @Prop({ required: true })
   title: string;
 
   /**
@@ -29,9 +28,8 @@ export class Course {
    * The instructor responsible for the course.
    * @type {string}
    * @required
-   * @index
    */
-  @Prop({ required: true, index: true })
+  @Prop({ required: true })
   instructor: string;
 
   /**
@@ -47,3 +45,9 @@ export class Course {
  * The Mongoose schema for the Course model.
  */
 export const CourseSchema = SchemaFactory.createForClass(Course);
+
+// Create a text index on 'title' and 'description' for text search
+CourseSchema.index({ title: 'text', description: 'text' });
+
+// Optionally, create a compound index on 'instructor' if you want fast instructor searches
+CourseSchema.index({ instructor: 1 });

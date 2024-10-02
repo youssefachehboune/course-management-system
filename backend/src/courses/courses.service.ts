@@ -29,9 +29,10 @@ export class CoursesService {
    *   schedule: "Thursday 13:00"
    * });
    */
-  async create(courseData: CreateCourseDto): Promise<Course> {
-    const newCourse = new this.CourseModel(courseData);
-    return newCourse.save();
+  async create(courseData: CreateCourseDto, userName?: string) {
+    const createdCourse = new this.CourseModel(courseData);
+    const newCourse = await createdCourse.save();
+    return newCourse;
   }
 
   /**
@@ -108,5 +109,17 @@ export class CoursesService {
       .skip(skip)
       .limit(limit)
       .exec();
+  }
+
+  /** Retrieves a course by ID.
+   *
+   * @param {string} id - The ID of the course to retrieve.
+   * @returns {Promise<Course | null>} The course with the specified ID, or null if not found.
+   *
+   * @example
+   * const course = await coursesService.findById('123');
+   */
+  async findById(id: string): Promise<Course | null> {
+    return this.CourseModel.findById(id).exec();
   }
 }

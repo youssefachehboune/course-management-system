@@ -1,3 +1,4 @@
+import { AuthModule } from './auth/auth.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -14,6 +15,7 @@ if (!process.env.MONGODB_URI) {
 @Module({
   imports: [
     UsersModule,
+    AuthModule,
     CoursesModule,
     LoggerModule,
     ConfigModule.forRoot({ isGlobal: true, cache: true, load: [config] }),
@@ -22,4 +24,4 @@ if (!process.env.MONGODB_URI) {
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
