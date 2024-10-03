@@ -41,7 +41,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ id, title, instructor, descript
         const data = await CourseLib.GetCourseById(id)
         // console.log(data)
         setData(data.data)
-        } catch (error) {
+        } catch {
             // console.log(error)
         }
     }

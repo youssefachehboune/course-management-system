@@ -77,9 +77,11 @@ const ClientLogin = () => {
       setUsernameError(null);
     setPasswordError(null);
     router.push('/');
-    } catch (error: any) {
+    } catch (error) {
       // console.error('Error logging in:', error);
-      setErrorMessage(error.message);
+      if(error instanceof Error) {
+        setErrorMessage(error.message);
+      }
       
     } finally {
       setLoading(false);
@@ -122,7 +124,7 @@ const ClientLogin = () => {
             {loading ? 'Logging in...' : 'Login'}
           </button>
           <p className='text-center font-light text-sm text-[#5857590]'>
-            Don't have an account? {` `}
+            Don&apos;t have an account?
             <Link href={'/auth/register'} className="text-[#000000] underline">
               Register
             </Link>

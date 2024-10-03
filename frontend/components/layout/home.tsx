@@ -60,7 +60,7 @@ export default function HomeComponent() {
         const response = await AuthLib.GetUserCourses();
         const newCourses = response.data; // Access the data property
         dispatch(changeDataSession({courses: newCourses}))
-      } catch (error) {
+      } catch {
         // console.error("Failed to fetch user courses:", error);
       }
     };
@@ -94,7 +94,7 @@ export default function HomeComponent() {
           // console.error("Expected an array, but got:", newCourses);
           setHasMore(false); // Stop loading if the response is invalid
         }
-      } catch (error) {
+      } catch {
         // console.error("Failed to fetch courses:", error);
       } finally {
         setLoading(false);

@@ -22,10 +22,10 @@ export default function Search() {
   const [search, setSearch] = useState<string>('');
   const [sort, setSort] = useState<number>(1); // 1 for ascending, -1 for descending
   // Fetch courses on page load and when page changes
-  const fetchCourses = async (limit = 10, save = true) => {
+  const fetchCourses = useCallback(async (limit = 10, save = true) => {
     setLoading(true);
     try {
-      const response = await CourseLib.GetCourses(page, 10, search, sort);
+      const response = await CourseLib.GetCourses(page, limit, search, sort);
       const newCourses = response.data; // Access the data property
 
       if (Array.isArray(newCourses)) {
@@ -43,23 +43,23 @@ export default function Search() {
         // console.error("Expected an array, but got:", newCourses);
         setHasMore(false); // Stop loading if the response is invalid
       }
-    } catch (error) {
+    } catch {
       // console.error("Failed to fetch courses:", error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, search, sort]);
   useEffect(() => {
     if(search.length > 0) {
       fetchCourses(10 ,false);
     }
-  }, [search]);
+  }, [search, fetchCourses]);
 
   useEffect(() => {
     if(search.length !== 0) {
       fetchCourses(10, true);
     }
-  }, [page]);
+  }, [page, fetchCourses, search]);
 
   useEffect(() => {
     if(search.length !== 0) {
@@ -70,7 +70,7 @@ export default function Search() {
       }
       fetchCourses(10, false);
     }
-  }, [sort]);
+  }, [sort, fetchCourses, search]);
 
   // handel sort 
   const handleSort = () => {

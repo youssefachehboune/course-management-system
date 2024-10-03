@@ -90,9 +90,11 @@ const ClientLogin = () => {
     setFullNameError(null);
     setPasswordError(null);
     router.push('/');
-    } catch (error: any) {
+    } catch (error) {
       // console.error('Error registering user:', error);
-      setErrorMessage(error.message);
+      if(error instanceof Error) { 
+        setErrorMessage(error.message);
+      }
     } finally {
       setLoading(false);
     }

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Category, Edit, Login, Logout, SearchNormal } from "iconsax-react";
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
@@ -64,7 +64,7 @@ const BottomBar: React.FC<BottomBarProps> = ({ onSelect, selected }) => {
     } else {
       dispatch(changeDataSession({isAuth: false})) 
     }
-  }, []);
+  }, [dispatch]);
 
   /**
    * Navigates the user to the login page.

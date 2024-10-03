@@ -51,7 +51,7 @@ const [error, setError] = React.useState<string>("");
 useEffect(() => {
   const schedule = `${shudeuleDay} ${shudeuleHour}:${shudeuleMinute}`;
   setCourseData({ ...courseData, schedule });
-}, [shudeuleDay, shudeuleHour, shudeuleMinute]);
+}, [shudeuleDay, shudeuleHour, shudeuleMinute, courseData]);
 
 
   /**
@@ -70,7 +70,7 @@ useEffect(() => {
     setLoading(true);
     setError("");
     try {
-      const response = await CourseLib.CreateCourse(courseData);
+      await CourseLib.CreateCourse(courseData);
       // console.log(response);
       setLoading(false);
       setCourseData({
@@ -79,7 +79,7 @@ useEffect(() => {
         schedule: '',
       })
       onSelect("home");
-    } catch (error) {
+    } catch {
       setLoading(false);
       setError("An unexpected error occurred. Please try again later.");
     }
