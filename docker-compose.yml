@@ -12,6 +12,7 @@ services:
       - mongodb
     environment:
       MONGODB_URI: mongodb://mongodb:27017/mydb # MongoDB connection string
+      CORS_ORIGIN: http://localhost:3000
     command: sh -c "npm run seed && npm start"
 
   frontend:
@@ -23,6 +24,8 @@ services:
       - "3000:3000"  # Map Next.js internal port 3000 to host port 3000
     depends_on:
       - backend
+    environment:
+      NEXT_PUBLIC_BACKEND_API_URL: http://localhost:3001
 
   mongodb:
     image: mongo:latest
