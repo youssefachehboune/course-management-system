@@ -1,4 +1,4 @@
-import { Course } from "@/components/home";
+import { Course } from "@/components/layout/home";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface SessionSlicetype {

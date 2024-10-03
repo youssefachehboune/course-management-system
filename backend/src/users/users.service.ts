@@ -49,7 +49,11 @@ export class UsersService {
     if (!user) {
         throw new Error('User not found');
     }
-   let courses : Course[]= [];
+   let courses : {
+    instructor: string;
+    id: string;
+    title: string;
+   }[]= [];
     for (let i = 0; i < user.courses.length; i++) {
         const course = await this.coursesService.findById(user.courses[i]);
         if(!course) continue;

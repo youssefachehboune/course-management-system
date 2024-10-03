@@ -13,7 +13,7 @@ export class CoursesService {
    */
   constructor(
     @InjectModel(Course.name) private CourseModel: Model<CourseDocument>,
-  ) {}
+  ) { }
 
   /**
    * Creates a new course in the database.
@@ -29,10 +29,18 @@ export class CoursesService {
    *   schedule: "Thursday 13:00"
    * });
    */
-  async create(courseData: CreateCourseDto, userName?: string) {
+  async create(courseData: CreateCourseDto): Promise<{
+    id: string;
+    title: string;
+    instructor: string;
+  }> {
     const createdCourse = new this.CourseModel(courseData);
     const newCourse = await createdCourse.save();
-    return newCourse;
+    return {
+      id: newCourse.id,
+      title: newCourse.title,
+      instructor: newCourse.instructor,
+    }
   }
 
   /**
@@ -45,9 +53,19 @@ export class CoursesService {
    * @example
    * const courses = await coursesService.findAll(1, 10);
    */
-  async findAll(page: number = 1, limit: number = 10): Promise<Course[]> {
+  async findAll(page: number = 1, limit: number = 10): Promise<{
+    id: string;
+    title: string;
+    instructor: string;
+  }[]> {
     const skip = (page - 1) * limit;
-    return this.CourseModel.find().skip(skip).limit(limit).exec();
+    const courses = this.CourseModel.find().skip(skip).limit(limit).exec();
+    // take just the id and title and instructor of each course
+    return (await courses).map((course) => ({
+      id: course.id,
+      title: course.title,
+      instructor: course.instructor
+    }))
   }
 
   /**
@@ -67,15 +85,26 @@ export class CoursesService {
     page: number = 1,
     limit: number = 10,
     sortnumber: 1 | -1 = 1,
-  ): Promise<Course[]> {
+  ): Promise<{
+    id: string;
+    title: string;
+    instructor: string;
+  }[]> {
     const skip = (page - 1) * limit;
-    return this.CourseModel.find({
+    const courses = this.CourseModel.find({
       $or: [{ title: new RegExp(search, 'i') }],
     })
       .sort({ title: sortnumber })
       .skip(skip)
       .limit(limit)
       .exec();
+
+    // take just the id and title and instructor of each course
+    return (await courses).map((course) => ({
+      id: course.id,
+      title: course.title,
+      instructor: course.instructor
+    }));
   }
 
   /**
@@ -96,10 +125,11 @@ export class CoursesService {
     page: number = 1,
     limit: number = 10,
     sortnumber: 1 | -1 = 1,
-  ): Promise<Course[]> {
+  ): Promise<
+    { id: string; title: string; instructor: string }[]> {
     const skip = (page - 1) * limit;
 
-    return this.CourseModel.find({
+    const courses = this.CourseModel.find({
       $and: [
         { title: new RegExp(search, 'i') },
         { instructor: new RegExp(instructor, 'i') },
@@ -109,6 +139,13 @@ export class CoursesService {
       .skip(skip)
       .limit(limit)
       .exec();
+
+    // take just the id and title and instructor of each course
+    return (await courses).map((course) => ({
+      id: course.id,
+      title: course.title,
+      instructor: course.instructor
+    }));
   }
 
   /** Retrieves a course by ID.
@@ -119,7 +156,24 @@ export class CoursesService {
    * @example
    * const course = await coursesService.findById('123');
    */
-  async findById(id: string): Promise<Course | null> {
-    return this.CourseModel.findById(id).exec();
+  async findById(id: string): Promise<{
+    id: string; title: string; instructor: string
+    description: string
+    schedule: string
+  } | null> {
+    const course = await this.CourseModel.findById(id).exec();
+
+    if (!course) {
+      return null;
+    }
+
+    return {
+      id: course.id,
+      title: course.title,
+      instructor: course.instructor,
+      description: course.description,
+      schedule: course.schedule
+    };
+
   }
 }

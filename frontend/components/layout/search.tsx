@@ -40,11 +40,11 @@ export default function Search() {
           }
         }
       } else {
-        console.error("Expected an array, but got:", newCourses);
+        // console.error("Expected an array, but got:", newCourses);
         setHasMore(false); // Stop loading if the response is invalid
       }
     } catch (error) {
-      console.error("Failed to fetch courses:", error);
+      // console.error("Failed to fetch courses:", error);
     } finally {
       setLoading(false);
     }
@@ -136,11 +136,12 @@ export default function Search() {
           >
           {courses.map((course, index) => (
             <CourseCard
+            id={course.id}
             key={index}
             title={course.title}
             instructor={course.instructor}
             description={course.description}
-            shudeule={course.schedule}
+            schedule={course.schedule}
             />
           ))}
           {/* {loading && <CourseCardSkeleton />} */}

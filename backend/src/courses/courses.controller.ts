@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
   ApiOperation,
+  ApiParam,
   ApiQuery,
   ApiResponse,
   ApiTags,
@@ -45,10 +46,7 @@ export class CoursesController {
       path: '/courses',
       data: {
         title: 'Compatible user-facing hierarchy',
-        description:
-          'Modern consider if. Girl current truth work available chair write.',
         instructor: 'Michael Gill',
-        schedule: 'Thursday 13:00',
         _id: '66fc5d4cded2ee9bc68a8f4e',
         __v: 0,
       },
@@ -72,12 +70,19 @@ export class CoursesController {
   @ApiBearerAuth()
   @Post()
   @UseGuards(JwtAuthGuard)
-  async create(@JwtUsername() username: string, @Body() createCourseDto: CreateCourseDto): Promise<Course> {
+  async create(@JwtUsername() username: string, @Body() createCourseDto: CreateCourseDto): Promise<{
+    title: string;
+    instructor: string;
+  }> {
     const user= await this.usersService.findByUsername(username);
     if(!user) throw new Error('User not found');
-    const newCourse = await this.coursesService.create({ ...createCourseDto, instructor: user?.fullName }, user.username);
+    const newCourse : {
+      id: string;
+      title: string;
+      instructor: string;
+    } = await this.coursesService.create({ ...createCourseDto, instructor: user?.fullName });
     user.courses.push(newCourse.id);
-    const newuser = await user.save();
+    await user.save();
     return newCourse;
   }
 
@@ -109,10 +114,7 @@ export class CoursesController {
         {
           _id: '66fc4fab075f07e6e8396f36',
           title: 'Open-architected bandwidth-monitored contingency',
-          description:
-            'Theory president share Republican soon figure. She skill his as bit raise. Bring notice every big onto institution behind listen. Character will way old.',
           instructor: 'Beth Williamson',
-          schedule: 'Tuesday 10:00',
           __v: 0,
         },
         '...',
@@ -159,7 +161,10 @@ export class CoursesController {
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
     @Query('sort') sort: number = 1,
-  ): Promise<Course[]> {
+  ): Promise<{
+    title: string;
+    instructor: string;
+  }[]> {
     if (search) {
       if (instructor) {
         return this.coursesService.findByTitleAndInstructor(
@@ -178,5 +183,43 @@ export class CoursesController {
       );
     }
     return this.coursesService.findAll(page, limit);
+  }
+
+  @ApiOperation({ summary: 'Retrieve course by id' }) // Swagger operation description
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully retrieved the course.',
+    type: Course,
+    example: {
+      statusCode: 200,
+      timestamp: '2024-10-01T20:37:22.599Z',
+      path: '/courses/66fc4fab075f07e6e8396f36',
+      data: {
+        _id: '66fc4fab075f07e6e8396f36',
+        title: 'Open-architected bandwidth-monitored contingency',
+        instructor: 'Beth Williamson',
+        description: 'test course',
+        schedule: 'test schedule',
+        __v: 0,
+      },
+    },
+  })
+  @ApiResponse({ status: 404, description: 'Course not found.' })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'Course ID',
+    example: '66fc4fab075f07e6e8396f36',
+  })
+
+  @ApiBearerAuth()
+  @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  async findById(@Param('id') id: string): Promise<
+    { id: string; title: string; instructor: string 
+      description: string
+      schedule: string
+    } | null> {
+    return this.coursesService.findById(id);
   }
 }

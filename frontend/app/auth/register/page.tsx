@@ -85,13 +85,13 @@ const ClientLogin = () => {
     try {
       const response = await AuthLib.CreateUser({ username, fullName, password });
       Cookies.set('accessToken', response.data.accessToken);
-      console.log('User registered:', response.data);
+      // console.log('User registered:', response.data);
       setUsernameError(null);
     setFullNameError(null);
     setPasswordError(null);
     router.push('/');
     } catch (error: any) {
-      console.error('Error registering user:', error);
+      // console.error('Error registering user:', error);
       setErrorMessage(error.message);
     } finally {
       setLoading(false);

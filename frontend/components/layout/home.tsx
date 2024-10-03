@@ -11,12 +11,14 @@ import { changeDataSession } from '@/redux-store/slices/session.slice';
 /**
  * Represents a course.
  *
+ * @property {string} id - The ID of the course.
  * @property {string} title - The title of the course.
  * @property {string} description - The description of the course.
  * @property {string} instructor - The instructor of the course.
  * @property {string} schedule - The schedule of the course.
  */
 export interface Course {
+  id: string;
     title: string;
     description: string;
     instructor: string;
@@ -59,7 +61,7 @@ export default function HomeComponent() {
         const newCourses = response.data; // Access the data property
         dispatch(changeDataSession({courses: newCourses}))
       } catch (error) {
-        console.error("Failed to fetch user courses:", error);
+        // console.error("Failed to fetch user courses:", error);
       }
     };
     if(logged)
@@ -89,11 +91,11 @@ export default function HomeComponent() {
             setFetchedCourses((prevCourses) => [...prevCourses, ...newCourses]);
           }
         } else {
-          console.error("Expected an array, but got:", newCourses);
+          // console.error("Expected an array, but got:", newCourses);
           setHasMore(false); // Stop loading if the response is invalid
         }
       } catch (error) {
-        console.error("Failed to fetch courses:", error);
+        // console.error("Failed to fetch courses:", error);
       } finally {
         setLoading(false);
       }
@@ -121,13 +123,15 @@ export default function HomeComponent() {
           <section className="flex flex-col gap-2">
           <h6 className="font-light text-[12px] tracking-wider font-poppins">Your courses:</h6>
           {courses.map((course, index) => (
-            <div className='flex flex-col gap-6'>
+            <div className='flex flex-col gap-6'
+            key={index}
+            >
             <CourseCard
-              key={index}
+            id={course.id}
               title={course.title}
               instructor={course.instructor}
               description={course.description}
-              shudeule={course.schedule}
+              schedule={course.schedule}
               />
               </div>
           ))}
@@ -143,11 +147,12 @@ export default function HomeComponent() {
       >
           {fetchedCourses.map((course, index) => (
             <CourseCard
+              id={course.id}
               key={index}
               title={course.title}
               instructor={course.instructor}
               description={course.description}
-              shudeule={course.schedule}
+              schedule={course.schedule}
             />
           ))}
       </div>

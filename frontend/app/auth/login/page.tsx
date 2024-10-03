@@ -78,7 +78,7 @@ const ClientLogin = () => {
     setPasswordError(null);
     router.push('/');
     } catch (error: any) {
-      console.error('Error logging in:', error);
+      // console.error('Error logging in:', error);
       setErrorMessage(error.message);
       
     } finally {

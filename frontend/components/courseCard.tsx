@@ -1,3 +1,4 @@
+import { CourseLib } from '@/apiClient/services/course.service'
 import { ProfileCircle } from 'iconsax-react'
 import React from 'react'
 
@@ -11,10 +12,11 @@ import React from 'react'
  * @prop {boolean} [newCourse] - Whether the course is new or not.
  */
 interface CourseCardProps {
+    id: string
     title: string
     instructor: string
     description: string
-    shudeule?: string
+    schedule?: string
     newCourse?: boolean
 }
 
@@ -28,15 +30,40 @@ interface CourseCardProps {
  * @example
  * <CourseCard title="Course Title" instructor="Course Instructor" description="Course Description" />
  */
-const CourseCard: React.FC<CourseCardProps> = ({ title, instructor, description, shudeule, newCourse }) => {
+const CourseCard: React.FC<CourseCardProps> = ({ id, title, instructor, description, schedule, newCourse }) => {
+
+    const [data, setData] = React.useState({
+        id,title,instructor,description,schedule
+    })
+
+    const getData = async (id: string) => {
+        try {
+        const data = await CourseLib.GetCourseById(id)
+        // console.log(data)
+        setData(data.data)
+        } catch (error) {
+            // console.log(error)
+        }
+    }
+
+
+
     return (
-        <div className={`w-full text-start flex flex-col gap-[7px] p-[16px] rounded-[12px] ${newCourse === true ? 'bg-[#E3FFE8]' : 'bg-white'} border-[0.2px] border-[#00000010] drop-shadow-[0_-2px_6px_rgba(0,0,0,0.03)]`}>
-            <h2 className="text-[14px] font-light tracking-wider">{title}</h2>
+        <div key={id} className={`w-full text-start flex flex-col gap-[7px] p-[16px] rounded-[12px] ${newCourse === true ? 'bg-[#E3FFE8]' : 'bg-white'} border-[0.2px] border-[#00000010] drop-shadow-[0_-2px_6px_rgba(0,0,0,0.03)]
+        cursor-pointer hover:bg-[#00000010]`} onClick={() => getData(data.id)}>
+            <h2 className="text-[14px] font-light tracking-wider">{data.title}</h2>
+            <div className='flex flex-row justify-between items-center '>
             <div className="flex flex-row items-center gap-[7px]">
                 <ProfileCircle size={18} />
-                <h4 className="text-[10px] font-medium tracking-wider">{instructor}</h4>
+                <h4 className="text-[10px] font-medium tracking-wider">{data.instructor}</h4>
             </div>
-            <p className="text-[10px] font-light tracking-[-0.04em] leading-[13px]">{description}</p>
+            {data.schedule &&
+            <span className='text-[8px] py-2 px-3 bg-black text-white rounded-[8px]'>
+                {data.schedule}
+            </span>
+            }
+            </div>
+            <p className="text-[10px] font-light tracking-[-0.04em] leading-[13px] overflow-hidden break-before-auto">{data.description}</p>
         </div>
     )
 }

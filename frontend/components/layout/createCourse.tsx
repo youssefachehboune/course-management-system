@@ -71,7 +71,7 @@ useEffect(() => {
     setError("");
     try {
       const response = await CourseLib.CreateCourse(courseData);
-      console.log(response);
+      // console.log(response);
       setLoading(false);
       setCourseData({
         title: '',

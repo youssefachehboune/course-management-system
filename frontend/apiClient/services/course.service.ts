@@ -52,5 +52,19 @@ export const CourseLib = {
     }
   },
 
+  /**
+   * Get course by id
+   * @returns {Promise<any>} The created course data.
+   * @throws {Error} If the course creation fails.
+   */
+  GetCourseById: async (id: string): Promise<any> => {
+    try {
+      const response = await axiosInstance.get(`/courses/${id}`);
+      return response.data;
+    } catch (error: any) {
+      throw new Error("An unexpected error occurred. Please try again later.");
+    }
+  },
+
 
 };
