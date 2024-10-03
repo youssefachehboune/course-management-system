@@ -101,12 +101,12 @@ const ClientLogin = () => {
   };
 
   return (
-    <form onSubmit={handleRegister} className="w-full flex flex-col justify-between h-screen gap-2 p-6 pt-10">
+    <form onSubmit={handleRegister} className="w-full md:border md:w-[400px] flex flex-col justify-between h-screen md:h-fit gap-2 p-6 pt-10">
       <div className='flex flex-col pt-10 pb-4 gap-2'>
         <h1 className='text-[36px] leading-[40px] font-light w-2/3'>Create new login password</h1>
         <p className='text-[18px] leading-[32px] font-light'>Create a new password for your account.</p>
       </div>
-      <div className='flex flex-col justify-between h-full'>
+      <div className='flex flex-col justify-between h-full md:gap-36'>
         <div className='flex flex-col gap-[12px]'>
           <TextInput
             value={username}

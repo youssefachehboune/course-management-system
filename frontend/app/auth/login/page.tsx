@@ -89,12 +89,12 @@ const ClientLogin = () => {
   };
 
   return (
-    <form onSubmit={handleLogin} className="w-full flex flex-col justify-between h-screen gap-2 p-6 pt-10">
+    <form onSubmit={handleLogin} className="w-full md:border md:w-[400px] items flex flex-col justify-between h-screen md:h-fit gap-2 p-6 pt-10">
       <div className='flex flex-col pt-10 pb-4 gap-2'>
         <h1 className='text-[36px] leading-[40px] font-light w-2/3'>Create new login password</h1>
         <p className='text-[18px] leading-[32px] font-light'>Create a new password for your account.</p>
       </div>
-      <div className='flex flex-col justify-between h-full'>
+      <div className='flex flex-col justify-between h-full md:gap-36' >
         <div className='flex flex-col gap-[12px]'>
           <TextInput
             value={username}
@@ -118,7 +118,7 @@ const ClientLogin = () => {
 
           <button
             type="submit"
-            className={`rounded-[4px] min-w-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 ${(loading  || username === '' || password === '') ? 'bg-gray-400 cursor-not-allowed' : 'bg-black'}`}
+            className={`rounded-[4px] min-w-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 ${(loading ) ? 'bg-gray-400 cursor-not-allowed' : 'bg-black'}`}
             disabled={loading  || username === '' || password === ''}
           >
             {loading ? 'Logging in...' : 'Login'}

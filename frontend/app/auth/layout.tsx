@@ -24,7 +24,7 @@ const AuthLayout = ({
     children: React.ReactNode;
 }>) =>  {
     return (
-        <div>
+        <div className="w-full h-screen flex flex-col items-center justify-center">
             <Navbar  withGoBack={true}/>
             {children}
         </div>
