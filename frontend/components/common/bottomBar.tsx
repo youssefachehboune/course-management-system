@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeDataSession } from '@/redux-store/slices/session.slice';
 import { RootState } from '@/redux-store/store';
+import { setAuthorizationHeader } from '@/apiClient/axios-instance';
 
 /**
  * The properties of the BottomBar component.
@@ -52,7 +53,8 @@ const BottomBar: React.FC<BottomBarProps> = ({ onSelect, selected }) => {
    */
   const handleLogout = () => {
     Cookies.remove('accessToken');
-    dispatch(changeDataSession({courses: [],isAuth: false})) 
+    dispatch(changeDataSession({courses: [],isAuth: false}))
+    setAuthorizationHeader();
     onSelect("home");
 
   };

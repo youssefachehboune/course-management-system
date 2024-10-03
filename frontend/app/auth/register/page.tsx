@@ -7,6 +7,7 @@ import { z } from 'zod';
 import TextInput from '@/components/textInput';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { setAuthorizationHeader } from '@/apiClient/axios-instance';
 
 const registerSchema = z.object({
   username: z.string().min(3, { message: 'Username must be at least 3 characters long' }),
@@ -84,7 +85,11 @@ const ClientLogin = () => {
 
     try {
       const response = await AuthLib.CreateUser({ username, fullName, password });
-      Cookies.set('accessToken', response.data.accessToken);
+      console.log(response.data);
+      Cookies.set("accessToken", response.data.accessToken);
+      // Update the Authorization header
+      setAuthorizationHeader();
+      console.log(Cookies.get('accessToken'));
       // console.log('User registered:', response.data);
       setUsernameError(null);
     setFullNameError(null);

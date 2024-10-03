@@ -103,7 +103,7 @@ export default function Search() {
       {/* Second section: Scrollable course list */}
       {courses.length > 0 ? (
         <>
-          <div className='flex flex-row w-full justify-start items-end'>
+          <div className='flex flex-row w-full justify-between items-center'>
             <h6 className="font-light text-[12px] tracking-wider">{courses.length} results</h6>
             <button className="w-fit text-center px-[12px] py-[10px] flex flex-row items-center justify-center gap-2 rounded-[7px] border-[0.4px] border-[#00000010] bg-white drop-shadow-[0_-2px_6px_rgba(0,0,0,0.02)]" onClick={handleSort}>
               {sort === 1 ? <ArrowUp size={10} /> : <ArrowDown size={10} />}

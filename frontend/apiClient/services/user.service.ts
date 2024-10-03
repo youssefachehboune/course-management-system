@@ -1,5 +1,5 @@
 
-import { axiosInstance } from "../axios-instance";
+import axiosInstance  from "../axios-instance";
 
 export type CreateUserType = {
     username: string;
