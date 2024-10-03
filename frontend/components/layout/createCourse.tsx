@@ -51,7 +51,7 @@ const [error, setError] = React.useState<string>("");
 useEffect(() => {
   const schedule = `${shudeuleDay} ${shudeuleHour}:${shudeuleMinute}`;
   setCourseData({ ...courseData, schedule });
-}, [shudeuleDay, shudeuleHour, shudeuleMinute, courseData]);
+}, [shudeuleDay, shudeuleHour, shudeuleMinute]);
 
 
   /**
@@ -115,7 +115,7 @@ useEffect(() => {
           <h6 className="font-light text-[12px] tracking-wider">Select The schedule day:</h6>
           <div className='flex flex-row w-full justify-start gap-2 items-center'>
             {Days.map((day) => (
-              <div className={`w-fit text-center px-[12px] py-[10px] flex flex-row items-center justify-center gap-2 rounded-[7px] border-[0.4px] border-[#00000010] bg-white drop-shadow-[0_-2px_6px_rgba(0,0,0,0.02)] ${day.long === shudeuleDay ? "bg-[#000000] text-white" : ""}`}
+              <div className={`w-fit text-center px-[12px] py-[10px] flex flex-row items-center justify-center gap-2 rounded-[7px] border-[0.4px] border-[#00000010] drop-shadow-[0_-2px_6px_rgba(0,0,0,0.02)] ${day.long === shudeuleDay ? "bg-[#000000] text-white" : ""}`}
                 onClick={() => setShudeuleDay(day.long)}
                 key={day.short}
                 style={{ cursor: "pointer" }}
