@@ -8,11 +8,11 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger'; // Import Swagger decorators
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Course } from './course.schema';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
-import { JwtUsername } from 'src/auth/jwt-username.decorator';
+import { JwtUsername } from '../auth/jwt-username.decorator';
 import { UsersService } from '../users/users.service';
 
 @ApiTags('courses') // Group the endpoints under "Courses" in the Swagger UI

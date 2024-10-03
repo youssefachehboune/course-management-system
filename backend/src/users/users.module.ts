@@ -7,7 +7,7 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './user.schema';
-import { CoursesModule } from 'src/courses/courses.module';
+import { CoursesModule } from '../courses/courses.module';
 
 @Module({
   imports: [
