@@ -74,7 +74,7 @@ const BottomBar: React.FC<BottomBarProps> = ({ onSelect, selected }) => {
   };
 
   return (
-    <div className=" bottom-0 z-20 fixed flex gap-2 flex-col w-full py-[24px] px-[58px] rounded-t-[24px] bg-white drop-shadow-[0_-2px_6px_rgba(0,0,0,0.03)]">
+    <div className=" bottom-0 z-20 max-w-[500px] fixed flex gap-2 flex-col w-full py-[24px] px-[58px] rounded-t-[24px] bg-white drop-shadow-[0_-2px_6px_rgba(0,0,0,0.03)]">
       <div className="flex flex-row w-full h-min justify-between">
         <button onClick={() => onSelect("home")} className={`w-[24px] flex flex-col items-center ${selected !== "home" ? "text-[#68667350]" : "text-[686673]"} `} >
           <Category size={24} />
