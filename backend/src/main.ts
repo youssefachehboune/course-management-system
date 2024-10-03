@@ -78,7 +78,10 @@ function configureSwagger(
 function configureCors(app: INestApplication, corsConfig: CorsConfig): void {
   // Enable CORS if configured
   if (corsConfig?.enabled) {
-    app.enableCors();
+    app.enableCors(
+      {origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+      credentials: true,}
+    );
   }
 }
 
